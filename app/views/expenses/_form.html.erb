@@ -1,0 +1,15 @@
+<%= form_for @expense do |form| %>
+  <div>
+    <%= form.label :ano %>
+    <%= form.text_field :ano %>
+  </div>
+
+  <div>
+    <%= form.label "Arquivo CSV" %>
+    <%= form.file_field :csv_file, multiple: false, accept: ".csv" %>
+  </div>
+
+  <div>
+    <%= form.submit "Enviar" %>
+  </div>
+<% end %>
