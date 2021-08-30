@@ -1,11 +1,23 @@
 <%= form_for @expense do |form| %>
+  <% if @expense.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@expense.errors.count, "erro") %> <%= "impediu".pluralize(@expense.errors.count, :'pt-BR') %> essa ação:</h2>
+  
+      <ul>
+      <% @expense.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div>
     <%= form.label :ano %>
     <%= form.text_field :ano %>
   </div>
 
   <div>
-    <%= form.label "Arquivo CSV" %>
+    <%= form.label :csv_file %>
     <%= form.file_field :csv_file, multiple: false, accept: ".csv" %>
   </div>
 
