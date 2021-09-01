@@ -27,26 +27,41 @@
                       <% gastos = @gastos.select { |gasto| gasto.nome == dep.nome && gasto.ano == expense.ano } %>
                       <% maxgasto = gastos.first.valor %>
                       <h2>Total: <%= number_to_currency(gastos.sum {|g| g[:valor]}) %></h2>
-                      <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th scope="col">Fornecedor</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col">Data de Emissão</th>
-                            <th scope="col">Nota</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <% gastos.each do |gasto| %>
-                            <tr class="<%= 'fw-bold text-danger' if gasto.valor == maxgasto %>">
-                              <td><%= gasto.fornecedor %></th>
-                              <td><%= number_to_currency(gasto.valor) %></td>
-                              <td><%= l gasto.emissao, format: :short, default: '-' %></td>
-                              <td><%= link_to gasto.urldoc, gasto.urldoc, target: "_blank" %></td>
-                            </tr>
-                          <% end %>
-                        </tbody>
-                      </table>
+                      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="pills-tabela-<%= dep.id %>-tab" data-bs-toggle="pill" data-bs-target="#pills-tabela-<%= dep.id %>" type="button" role="tab" aria-controls="pills-tabela-<%= dep.id %>" aria-selected="true">Tabela</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="pills-grafico-<%= dep.id %>-tab" data-bs-toggle="pill" data-bs-target="#pills-grafico-<%= dep.id %>" type="button" role="tab" aria-controls="pills-grafico-<%= dep.id %>" aria-selected="false">Gráfico</button>
+                        </li>
+                      </ul>
+                      <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-tabela-<%= dep.id %>" role="tabpanel" aria-labelledby="pills-tabela-<%= dep.id %>-tab">
+                          <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th scope="col">Fornecedor</th>
+                                <th scope="col">Valor</th>
+                                <th scope="col">Data de Emissão</th>
+                                <th scope="col">Nota</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% gastos.each do |gasto| %>
+                                <tr class="<%= 'fw-bold text-danger' if gasto.valor == maxgasto %>">
+                                  <td><%= gasto.fornecedor %></th>
+                                  <td><%= number_to_currency(gasto.valor) %></td>
+                                  <td><%= l gasto.emissao, format: :short, default: '-' %></td>
+                                  <td><%= link_to gasto.urldoc, gasto.urldoc, target: "_blank" %></td>
+                                </tr>
+                              <% end %>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="tab-pane fade" id="pills-grafico-<%= dep.id %>" role="tabpanel" aria-labelledby="pills-grafico-<%= dep.id %>-tab">
+                          <%= bar_chart Gasto.where(nome: dep.nome, ano: expense.ano).order("sum_valor desc").group(:fornecedor).sum(:valor), thousands: ".", decimal: ",", height: "3500px" %>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 <% end %>
