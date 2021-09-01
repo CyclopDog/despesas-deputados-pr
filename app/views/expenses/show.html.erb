@@ -1,5 +1,6 @@
 <h1><%= @expense.ano %></h1>
-
-<%= flash[:success] %>
-
-<%= flash[:error] %>
+<ul>
+  <%= @gastos.each do |gasto| %>
+    <li><%= gasto %></li>
+  <%end%>
+</ul>

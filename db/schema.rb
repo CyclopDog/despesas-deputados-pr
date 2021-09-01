@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_31_175339) do
+ActiveRecord::Schema.define(version: 2021_09_01_145224) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -47,6 +47,8 @@ ActiveRecord::Schema.define(version: 2021_08_31_175339) do
     t.string "urldoc"
     t.string "uf"
     t.integer "expense_id", null: false
+    t.integer "ano"
+    t.string "cadastro"
     t.index ["expense_id"], name: "index_gastos_on_expense_id"
   end
 

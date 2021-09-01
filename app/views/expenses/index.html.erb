@@ -1,1 +1,63 @@
-Expenses
+<div class="container">
+  <div class="row">
+    <% @deputados.each do |dep| %>
+      <div class="col-auto my-2">
+        <div class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#<%= dep.nome.gsub(" ", "") %>">
+          <img src="<%= "http://www.camara.leg.br/internet/deputado/bandep/#{dep.cadastro}.jpg" %>" class="card-img-top" alt="<%= dep.nome %>">
+          <div class="card-body">
+            <h5 class="card-title"><%= dep.nome %></h5>
+          </div>
+        </div>
+        <div class="modal fade" id="<%= dep.nome.gsub(" ", "") %>" tabindex="-1" aria-labelledby="<%= dep.nome.gsub(" ", "") %>Label" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="<%= dep.nome.gsub(" ", "") %>Label"><%= dep.nome %></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <% @expenses.each do |expense| %>
+                  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="pills-<%= expense.ano %>-tab" data-bs-toggle="pill" data-bs-target="#pills-<%= expense.ano %>" type="button" role="tab" aria-controls="pills-<%= expense.ano %>" aria-selected="true"><%= expense.ano %></button>
+                    </li>
+                  </ul>
+                  <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-<%= expense.ano %>" role="tabpanel" aria-labelledby="pills-<%= expense.ano %>-tab">
+                      <% gastos = @gastos.select { |gasto| gasto.nome == dep.nome && gasto.ano == expense.ano } %>
+                      <% maxgasto = gastos.first.valor %>
+                      <h2>Total: <%= number_to_currency(gastos.sum {|g| g[:valor]}) %></h2>
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">Fornecedor</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Data de Emissão</th>
+                            <th scope="col">Nota</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% gastos.each do |gasto| %>
+                            <tr class="<%= 'fw-bold text-danger' if gasto.valor == maxgasto %>">
+                              <td><%= gasto.fornecedor %></th>
+                              <td><%= number_to_currency(gasto.valor) %></td>
+                              <td><%= l gasto.emissao, format: :short, default: '-' %></td>
+                              <td><%= link_to gasto.urldoc, gasto.urldoc, target: "_blank" %></td>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <%end%>
+  </div>
+</div>

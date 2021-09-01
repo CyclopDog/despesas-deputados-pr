@@ -3,9 +3,13 @@ class ExpensesController < ApplicationController
   before_action :get_expense, only: [:show]
 
   def index
+    @deputados = Gasto.all.group(:nome).order(:nome)
+    @expenses = Expense.all.order(:ano)
+    @gastos = Gasto.all.order("valor desc")
   end
 
   def show
+    @gastos = @expense.gastos.group(:nome).sum(:valor)
   end
 
   def new
@@ -26,8 +30,18 @@ class ExpensesController < ApplicationController
           valor = row[19].gsub('"', '').strip
           urldoc = row[30].gsub('"', '').strip
           uf = row[5].gsub('"', '').strip
+          cadastro = row[2].gsub('"', '').strip
+          ano = @expense.ano
 
-          @expense.gastos.create(nome: nome, emissao: emissao, fornecedor: fornecedor, valor: valor, urldoc: urldoc, uf: uf)
+          @expense.gastos.create(nome: nome, 
+                                 emissao: emissao, 
+                                 fornecedor: fornecedor, 
+                                 valor: valor, 
+                                 urldoc: urldoc, 
+                                 uf: uf, 
+                                 cadastro: cadastro, 
+                                 ano: ano
+                                )
         end
       end
 
