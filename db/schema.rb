@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_30_220336) do
+ActiveRecord::Schema.define(version: 2021_08_31_175339) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -39,5 +39,17 @@ ActiveRecord::Schema.define(version: 2021_08_30_220336) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "gastos", force: :cascade do |t|
+    t.string "nome"
+    t.datetime "emissao"
+    t.string "fornecedor"
+    t.float "valor"
+    t.string "urldoc"
+    t.string "uf"
+    t.integer "expense_id", null: false
+    t.index ["expense_id"], name: "index_gastos_on_expense_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "gastos", "expenses"
 end
