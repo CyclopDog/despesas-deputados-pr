@@ -1,0 +1,15 @@
+<ul class="nav nav-pills mb-3" id="pills-tab-comparativo" role="tablist">
+  <% @expenses.each do |expense| %>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link <%= 'active' if expense == @expenses.first %>" id="pills-comparativo-<%= expense.ano %>-tab" data-bs-toggle="pill" data-bs-target="#pills-comparativo-<%= expense.ano %>" type="button" role="tab" aria-controls="pills-comparativo-<%= expense.ano %>" aria-selected="true"><%= expense.ano %></button>
+    </li>
+  <% end %>
+</ul>
+
+<div class="tab-content" id="pills-comparativo">
+  <% @expenses.each do |expense| %>
+    <div class="tab-pane fade show <%= 'active' if expense == @expenses.first %>" id="pills-comparativo-<%= expense.ano %>" role="tabpanel" aria-labelledby="pills-comparativo-<%= expense.ano %>-tab">
+      <%= bar_chart Gasto.where(ano: expense.ano).order("sum_valor desc").group(:nome).sum(:valor), thousands: ".", decimal: ",", height: "100vh" %>
+    </div>
+  <% end %>
+</div>
