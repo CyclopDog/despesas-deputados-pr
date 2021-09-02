@@ -3,6 +3,7 @@ class ExpensesController < ApplicationController
   USERS = { "demo" => "boitata" }
   before_action :get_expense, only: [:show]
   before_action :authenticate, ony: [:new, :create]
+  invisible_captcha only: [:create], honeypot: :jacarecuca
 
   def index
     @deputados = Gasto.all.group(:nome).order(:nome)

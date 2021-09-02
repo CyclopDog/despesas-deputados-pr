@@ -56,3 +56,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'active_storage_validations', '~> 0.9.5'
 gem 'bootstrap', '~> 5.1'
 gem 'chartkick', '~> 4.0', '>= 4.0.5'
+gem 'invisible_captcha', '~> 2.0'
