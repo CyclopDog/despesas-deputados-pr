@@ -43,7 +43,7 @@ group :development do
 end
 
 group :production do
-  gem 'postgresql', '~> 1.0'
+  gem 'mysql2', '~> 0.5.3'
 end
 
 group :test do
