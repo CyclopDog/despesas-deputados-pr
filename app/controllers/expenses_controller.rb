@@ -6,7 +6,7 @@ class ExpensesController < ApplicationController
   invisible_captcha only: [:create], honeypot: :jacarecuca
 
   def index
-    @deputados = Gasto.all.unscoped.group(:nome).order(:nome)
+    @deputados = Gasto.all.group(:nome).order(:nome)
     @expenses = Expense.all.order("ano desc")
     @gastos = Gasto.all.order("valor desc")
   end
