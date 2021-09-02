@@ -2,7 +2,7 @@ class ExpensesController < ApplicationController
   require 'csv'
   USERS = { "demo" => "boitata" }
   before_action :get_expense, only: [:show]
-  before_action :authenticate, ony: [:new, :create]
+  before_action :authenticate, except: :index
   invisible_captcha only: [:create], honeypot: :jacarecuca
 
   def index
@@ -48,7 +48,7 @@ class ExpensesController < ApplicationController
         end
       end
 
-      redirect_to @expense
+      redirect_to root_path
 
     else
       render :new

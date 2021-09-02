@@ -1,11 +1,15 @@
-<ul class="nav nav-pills mb-3" id="pills-tab-index" role="tablist">
+<ul class="nav nav-pills mb-3 p-2" id="pills-tab-index" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link active" id="pills-geral-tab" data-bs-toggle="pill" data-bs-target="#pills-geral" type="button" role="tab" aria-controls="pills-geral" aria-selected="true">Comparativo Geral Anual</button>
   </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="pills-deputados-tab" data-bs-toggle="pill" data-bs-target="#pills-deputados" type="button" role="tab" aria-controls="pills-deputados" aria-selected="false">Dados por Deputado</button>
   </li>
+  <li class="nav-item">
+    <%= link_to "Subir novo arquivo", new_expense_path, class: "nav-link" %>
+  </li>
 </ul>
+
 <div class="tab-content" id="pills-tabContent">
   <div class="tab-pane fade show active" id="pills-geral" role="tabpanel" aria-labelledby="pills-geral-tab">
     <%= render "comparativo_geral" %>

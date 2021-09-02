@@ -1,29 +1,44 @@
 <%= form_for @expense do |form| %>
   <% if @expense.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@expense.errors.count, "erro") %> <%= "impediu".pluralize(@expense.errors.count, :'pt-BR') %> essa ação:</h2>
+    <div id="error_explanation" class="border border-danger border-2 p-2">
+      <h2 class="text-danger"><%= pluralize(@expense.errors.count, "erro") %> <%= "impediu".pluralize(@expense.errors.count, :'pt-BR') %> essa ação:</h2>
   
-      <ul>
+      <ul class="list-group list-group-flush">
       <% @expense.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+        <li class="list-group-item"><%= msg %></li>
       <% end %>
       </ul>
     </div>
   <% end %>
 
-  <%= f.invisible_captcha :jacarecuca %>
+  <%= form.invisible_captcha :jacarecuca %>
 
-  <div>
-    <%= form.label :ano %>
-    <%= form.text_field :ano %>
+  <div class="mb-3">
+    <%= form.label :ano, class: "form-label" %>
+    <%= form.text_field :ano, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.label :csv_file %>
-    <%= form.file_field :csv_file, multiple: false, accept: ".csv" %>
+  <div class="mb-3">
+    <%= form.label :csv_file, class: "form-label" %>
+    <%= form.file_field :csv_file, multiple: false, accept: ".csv", class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.submit "Enviar" %>
+  <div data-bs-toggle="modal" data-bs-target="#loadingData">
+    <%= form.submit "Enviar", class: "btn btn-primary" %>
+  </div>
+
+  <div class="modal fade" id="loadingData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loadingDataLabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Carregado...</span>
+          </div>
+          <p>Processando arquivo</p>
+          <p>Isso pode demorar alguns minutos</p>
+        </div>
+      </div>
+    </div>
   </div>
 <% end %>
+

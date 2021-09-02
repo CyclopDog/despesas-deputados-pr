@@ -8,3 +8,9 @@ body {
 .modal-xl {
   max-width: 95%;
 }
+
+#pills-tab-index {
+  li:last-child {
+    margin-left: auto;
+  }
+}
