@@ -1,6 +1,8 @@
 class ExpensesController < ApplicationController
   require 'csv'
+  USERS = { "demo" => "boitata" }
   before_action :get_expense, only: [:show]
+  before_action :authenticate, ony: [:new, :create]
 
   def index
     @deputados = Gasto.all.group(:nome).order(:nome)
@@ -59,5 +61,11 @@ class ExpensesController < ApplicationController
 
     def get_expense
       @expense = Expense.find(params[:id])
+    end
+
+    def authenticate
+      authenticate_or_request_with_http_digest do |username|
+        USERS[username]
+      end
     end
 end
