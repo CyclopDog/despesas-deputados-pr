@@ -1,78 +1,100 @@
 <div class="container">
   <div class="row">
+
     <% @deputados.each do |dep| %>
       <div class="col-auto my-2">
+        <!-- Button trigger modal -->
         <div class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#<%= dep.nome.gsub(" ", "") %>">
           <img src="<%= "http://www.camara.leg.br/internet/deputado/bandep/#{dep.cadastro}.jpg" %>" class="card-img-top" alt="<%= dep.nome %>">
           <div class="card-body">
             <h5 class="card-title"><%= dep.nome %></h5>
           </div>
         </div>
-        <div class="modal fade" id="<%= dep.nome.gsub(" ", "") %>" tabindex="-1" aria-labelledby="<%= dep.nome.gsub(" ", "") %>Label" aria-hidden="true">
-          <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="<%= dep.nome.gsub(" ", "") %>Label"><%= dep.nome %></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="<%= dep.nome.gsub(" ", "") %>" tabindex="-1" aria-labelledby="<%= dep.nome.gsub(" ", "") %>Label" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="<%= dep.nome.gsub(" ", "") %>Label"><%= dep.nome %></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+              <!-- Ano Tab -->
+              <ul class="nav nav-pills mb-3" id="pills-tab-<%= dep.nome.gsub(" ", "") %>" role="tablist">
                 <% @expenses.each do |expense| %>
-                  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                      <button class="nav-link active" id="pills-<%= expense.ano %>-tab" data-bs-toggle="pill" data-bs-target="#pills-<%= expense.ano %>" type="button" role="tab" aria-controls="pills-<%= expense.ano %>" aria-selected="true"><%= expense.ano %></button>
-                    </li>
-                  </ul>
-                  <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-<%= expense.ano %>" role="tabpanel" aria-labelledby="pills-<%= expense.ano %>-tab">
-                      <% gastos = @gastos.select { |gasto| gasto.nome == dep.nome && gasto.ano == expense.ano } %>
-                      <% maxgasto = gastos.first.valor %>
-                      <h2>Total: <%= number_to_currency(gastos.sum {|g| g[:valor]}) %></h2>
-                      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                          <button class="nav-link active" id="pills-tabela-<%= dep.id %>-tab" data-bs-toggle="pill" data-bs-target="#pills-tabela-<%= dep.id %>" type="button" role="tab" aria-controls="pills-tabela-<%= dep.id %>" aria-selected="true">Tabela</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                          <button class="nav-link" id="pills-grafico-<%= dep.id %>-tab" data-bs-toggle="pill" data-bs-target="#pills-grafico-<%= dep.id %>" type="button" role="tab" aria-controls="pills-grafico-<%= dep.id %>" aria-selected="false">Gráfico</button>
-                        </li>
-                      </ul>
-                      <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-tabela-<%= dep.id %>" role="tabpanel" aria-labelledby="pills-tabela-<%= dep.id %>-tab">
-                          <table class="table table-striped">
-                            <thead>
-                              <tr>
-                                <th scope="col">Fornecedor</th>
-                                <th scope="col">Valor</th>
-                                <th scope="col">Data de Emissão</th>
-                                <th scope="col">Nota</th>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link <%= 'active' if expense == @expenses.first %>" id="pills-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>-tab" data-bs-toggle="pill" data-bs-target="#pills-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>" type="button" role="tab" aria-controls="pills-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>" aria-selected="true"><%= expense.ano %></button>
+                  </li>
+                <% end %>
+              </ul>
+
+              <div class="tab-content" id="pills-ano-<%= dep.nome.gsub(" ", "") %>">
+                <% @expenses.each do |expense| %>
+                  <% gastos = @gastos.select { |gasto| gasto.nome == dep.nome && gasto.ano == expense.ano } %>
+                  <% maxgasto = Gasto.where(nome: dep.nome, ano: expense.ano).maximum("valor") %>
+
+                  <!-- Dados Tab -->
+                  <div class="tab-pane fade show  <%= 'active' if expense == @expenses.first %>" id="pills-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>" role="tabpanel" aria-labelledby="pills-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>-tab">
+                    <ul class="nav nav-pills mb-3" id="pills-tab-<%= dep.nome.gsub(" ", "") %>" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-tabela-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>-tab" data-bs-toggle="pill" data-bs-target="#pills-tabela-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>" type="button" role="tab" aria-controls="pills-tabela-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>" aria-selected="true">Tabela</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-graficos-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>-tab" data-bs-toggle="pill" data-bs-target="#pills-graficos-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>" type="button" role="tab" aria-controls="pills-graficos-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>" aria-selected="false">Gráfico</button>
+                      </li>
+                    </ul>
+
+                    <h2>Total: <%= number_to_currency(gastos.sum {|g| g[:valor]}) %></h2>
+
+                    <div class="tab-content" id="pills-dados-<%= dep.nome.gsub(" ", "") %>">
+                      <div class="tab-pane fade show active" id="pills-tabela-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>" role="tabpanel" aria-labelledby="pills-tabela-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>-tab">
+
+                        <!-- Tabela -->
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th scope="col">Fornecedor</th>
+                              <th scope="col">Valor</th>
+                              <th scope="col">Data de Emissão</th>
+                              <th scope="col">Nota</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% gastos.each do |gasto| %>
+                              <tr class="<%= 'fw-bold text-danger' if gasto.valor == maxgasto %>">
+                                <td><%= gasto.fornecedor %></th>
+                                <td><%= number_to_currency(gasto.valor) %></td>
+                                <td><%= l gasto.emissao, format: :short, default: '-' %></td>
+                                <td><%= link_to gasto.urldoc, gasto.urldoc, target: "_blank" %></td>
                               </tr>
-                            </thead>
-                            <tbody>
-                              <% gastos.each do |gasto| %>
-                                <tr class="<%= 'fw-bold text-danger' if gasto.valor == maxgasto %>">
-                                  <td><%= gasto.fornecedor %></th>
-                                  <td><%= number_to_currency(gasto.valor) %></td>
-                                  <td><%= l gasto.emissao, format: :short, default: '-' %></td>
-                                  <td><%= link_to gasto.urldoc, gasto.urldoc, target: "_blank" %></td>
-                                </tr>
-                              <% end %>
-                            </tbody>
-                          </table>
-                        </div>
-                        <div class="tab-pane fade" id="pills-grafico-<%= dep.id %>" role="tabpanel" aria-labelledby="pills-grafico-<%= dep.id %>-tab">
-                          <%= bar_chart Gasto.where(nome: dep.nome, ano: expense.ano).order("sum_valor desc").group(:fornecedor).sum(:valor), thousands: ".", decimal: ",", height: "3500px" %>
-                        </div>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      
+                      </div>
+
+                      <div class="tab-pane fade" id="pills-graficos-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>" role="tabpanel" aria-labelledby="pills-graficos-<%= dep.nome.gsub(" ", "") %>-<%= expense.ano %>-tab">
+                      
+                        <!-- Gráfico -->
+                        <%= pie_chart Gasto.where(nome: dep.nome, ano: expense.ano).order("sum_valor desc").group(:fornecedor).sum(:valor), thousands: ".", decimal: ",", height: "1200px" %>
+                      
                       </div>
                     </div>
                   </div>
                 <% end %>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
             </div>
           </div>
         </div>
       </div>
-    <%end%>
+    <% end %>
+
   </div>
 </div>

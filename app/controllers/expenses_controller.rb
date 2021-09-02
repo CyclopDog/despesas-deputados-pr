@@ -4,7 +4,7 @@ class ExpensesController < ApplicationController
 
   def index
     @deputados = Gasto.all.group(:nome).order(:nome)
-    @expenses = Expense.all.order(:ano)
+    @expenses = Expense.all.order("ano desc")
     @gastos = Gasto.all.order("valor desc")
   end
 
